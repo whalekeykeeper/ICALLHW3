@@ -1,47 +1,148 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+<script>
+import axios from 'axios';
+
+export default {
+  data() {
+    return {
+      textInput: '',
+      selectedTagType: 'POS',
+      tags: [],
+      tagColors: {},
+      processedText: '',
+      highlightedText: '',
+      process_base: 'http://127.0.0.1:5000',
+    };
+  },
+  methods: {
+    submitForm() {
+      axios
+          .post(this.process_base + '/process-text', {
+            text: this.textInput,
+            [this.selectedTagType]: true,
+          })
+          .then((response) => {
+            this.tags = response.data.tags;
+            this.initializeTagColors();
+            this.processedText = response.data.highlightedText; // Store processed text
+            this.applyHighlighting(); // Call applyHighlighting after setting processedText
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+    },
+    applyHighlighting() {
+      let highlightedText = this.processedText || this.textInput; // Use processedText or textInput
+      for (const [tag, color] of Object.entries(this.tagColors)) {
+        highlightedText = highlightedText.replace(
+            new RegExp(`<${tag}>`, 'g'),
+            `<span style="background-color: ${color}">`,
+        );
+        highlightedText = highlightedText.replace(
+            new RegExp(`</${tag}>`, 'g'),
+            '</span>',
+        );
+      }
+      
+      this.highlightedText = highlightedText;
+    },
+    initializeTagColors() {
+      const randomColor = () => "#" + Math.floor(Math.random() * 16777215).toString(16);
+
+      for (const tag of this.tags) {
+        this.tagColors[tag] = randomColor();
+      }
+    },
+  },
+};
 </script>
 
+
+
+
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+  <div>
+    <form @submit.prevent="submitForm">
+      <textarea v-model="textInput" rows="5" cols="40"></textarea>
+      <div>
+        <label>
+          Highlight:
+          <select v-model="selectedTagType">
+            <option value="POS">Part-of-Speech (POS) Tags</option>
+            <option value="NE">Named Entity (NE) Tags</option>
+          </select>
+        </label>
+      </div>
+      <div>
+        <div v-for="(tag, index) in tags" :key="index">
+          <input type="color" v-model="tagColors[tag]" @input="applyHighlighting" />
+          {{ tag }}
+        </div>
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+    <div>
+      <br><br>
+      <p v-html="highlightedText"></p>
     </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  </div>
 </template>
 
+
 <style scoped>
-header {
-  line-height: 1.5;
+textarea {
+  width: 100%;
+  margin-bottom: 10px;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+input[type="color"] {
+  vertical-align: middle;
+  margin-right: 5px;
 }
 </style>
+
+
+
+<!--<script setup>-->
+
+<!--</script>-->
+
+<!--<template>-->
+<!--  <header>-->
+<!--    <div>-->
+<!--      <h2>Enter a text for highlighting</h2>-->
+<!--    </div>-->
+<!--  </header>-->
+
+<!--  <main>-->
+<!--    <textarea></textarea>-->
+<!--  </main>-->
+<!--</template>-->
+
+<!--<style scoped>-->
+<!--header {-->
+<!--  line-height: 1.5;-->
+<!--}-->
+
+<!--.logo {-->
+<!--  display: block;-->
+<!--  margin: 0 auto 2rem;-->
+<!--}-->
+
+<!--@media (min-width: 1024px) {-->
+<!--  header {-->
+<!--    display: flex;-->
+<!--    place-items: center;-->
+<!--    padding-right: calc(var(&#45;&#45;section-gap) / 2);-->
+<!--  }-->
+
+<!--  .logo {-->
+<!--    margin: 0 2rem 0 0;-->
+<!--  }-->
+
+<!--  header .wrapper {-->
+<!--    display: flex;-->
+<!--    place-items: flex-start;-->
+<!--    flex-wrap: wrap;-->
+<!--  }-->
+<!--}-->
+<!--</style>-->
