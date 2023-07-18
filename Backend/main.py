@@ -8,6 +8,7 @@ app = Flask(__name__)
 nlp = spacy.load("en_core_web_sm")
 CORS(app)
 
+
 @app.route("/process-text", methods=["POST"])
 def process_text():
     text = request.json["text"]

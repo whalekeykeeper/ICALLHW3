@@ -31,7 +31,7 @@ export default {
           });
     },
     applyHighlighting() {
-      let highlightedText = this.processedText || this.textInput; // Use processedText or textInput
+      let highlightedText = this.processedText || this.textInput;
       for (const [tag, color] of Object.entries(this.tagColors)) {
         highlightedText = highlightedText.replace(
             new RegExp(`<${tag}>`, 'g'),
@@ -55,9 +55,6 @@ export default {
   },
 };
 </script>
-
-
-
 
 <template>
   <div>
@@ -99,50 +96,3 @@ input[type="color"] {
   margin-right: 5px;
 }
 </style>
-
-
-
-<!--<script setup>-->
-
-<!--</script>-->
-
-<!--<template>-->
-<!--  <header>-->
-<!--    <div>-->
-<!--      <h2>Enter a text for highlighting</h2>-->
-<!--    </div>-->
-<!--  </header>-->
-
-<!--  <main>-->
-<!--    <textarea></textarea>-->
-<!--  </main>-->
-<!--</template>-->
-
-<!--<style scoped>-->
-<!--header {-->
-<!--  line-height: 1.5;-->
-<!--}-->
-
-<!--.logo {-->
-<!--  display: block;-->
-<!--  margin: 0 auto 2rem;-->
-<!--}-->
-
-<!--@media (min-width: 1024px) {-->
-<!--  header {-->
-<!--    display: flex;-->
-<!--    place-items: center;-->
-<!--    padding-right: calc(var(&#45;&#45;section-gap) / 2);-->
-<!--  }-->
-
-<!--  .logo {-->
-<!--    margin: 0 2rem 0 0;-->
-<!--  }-->
-
-<!--  header .wrapper {-->
-<!--    display: flex;-->
-<!--    place-items: flex-start;-->
-<!--    flex-wrap: wrap;-->
-<!--  }-->
-<!--}-->
-<!--</style>-->
