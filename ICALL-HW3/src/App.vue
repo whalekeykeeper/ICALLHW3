@@ -58,8 +58,9 @@ export default {
 
 <template>
   <div>
+    <h1>Input a text, choose POS or NE, then click Submit:</h1>
     <form @submit.prevent="submitForm">
-      <textarea v-model="textInput" rows="5" cols="40"></textarea>
+      <textarea v-model="textInput" rows="8" cols="60"></textarea>
       <div>
         <label>
           Highlight:
@@ -78,7 +79,7 @@ export default {
       <button type="submit">Submit</button>
     </form>
     <div>
-      <br><br>
+      <h1>Here is the processed text:</h1>
       <p v-html="highlightedText"></p>
     </div>
   </div>
