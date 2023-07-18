@@ -2,3 +2,4 @@
 .DS_Store
 Backend/.idea/*
 Backend/venv/*
+Backend/__pycache__/
